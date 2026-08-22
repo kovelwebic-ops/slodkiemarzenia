@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Słodkie marzenia — меню тортів</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #FFFDFB;
+    --paper: #FFFFFF;
+    --ink: #241F1D;
+    --ink-soft: #8C8580;
+    --accent: #C46A80;      /* рожевий — основний акцент */
+    --accent-soft: #F4E6EA;
+    --peach: #F3C9A0;       /* персиковий — другий акцент (теги) */
+    --peach-soft: #FBEEDF;
+    --sage: #A9BFA5;        /* шавліїв зелений — третій акцент (теги) */
+    --sage-soft: #EAF0E7;
+    --line: rgba(36,31,29,0.10);
+    --shadow: 0 16px 36px rgba(36,31,29,0.14);
+    --radius: 16px;
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Public Sans', sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    font-family: var(--font-body);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+
+  /* ---------- ФОНОВА ТЕКСТУРА ----------
+     М'які кольорові плями + тонкий "паперовий" шум, щоб білий фон
+     не виглядав пустим, але лишався мінімалістичним. */
+  body::before{
+    content:"";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(196,106,128,0.09), transparent 42%),
+      radial-gradient(circle at 88% 12%, rgba(243,201,160,0.14), transparent 46%),
+      radial-gradient(circle at 50% 95%, rgba(169,191,165,0.10), transparent 50%),
+      radial-gradient(circle at 92% 80%, rgba(196,106,128,0.06), transparent 40%);
+  }
+  body::after{
+    content:"";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: .035;
+    mix-blend-mode: multiply;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
+    background-size: 180px 180px;
+  }
+  header, main, footer{ position: relative; z-index: 1; }
+
+  @keyframes fadeUp{
+    from{ opacity:0; transform: translateY(14px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  header{
+    text-align:center;
+    padding: 48px 20px 32px;
+    max-width: 720px;
+    margin: 0 auto;
+    animation: fadeUp .6s ease both;
+  }
+  .brand{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(30px, 6vw, 44px);
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .city{
+    font-size: 13px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+  .contacts{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+  }
+  .contacts a{
+    color: var(--ink);
+    text-decoration:none;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1px;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .contacts a:hover{ color: var(--accent); border-color: var(--accent); }
+  .dot{ opacity:.4; }
+
+  .header-line{
+    width: 64px;
+    height: 2px;
+    background: var(--accent);
+    margin: 26px auto 0;
+    border-radius: 2px;
+  }
+
+  main{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 10px 20px 90px;
+  }
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 26px;
+  }
+  @media (max-width: 1020px){ .grid{ grid-template-columns: repeat(2, 1fr); gap: 20px; } }
+  @media (max-width: 680px){ .grid{ grid-template-columns: 1fr; gap: 18px; } }
+
+  .card{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    color: var(--ink);
+    cursor: pointer;
+    padding: 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 10px rgba(36,31,29,0.05);
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    animation: fadeUp .5s ease both;
+  }
+  .card:hover, .card:focus-visible{
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+    border-color: transparent;
+    outline: none;
+  }
+  .card-media{
+    aspect-ratio: 1/1;
+    position: relative;
+    overflow:hidden;
+    background: var(--accent-soft);
+  }
+  .card-media img{
+    width:100%; height:100%; object-fit: cover; display:block;
+    transition: transform .5s ease;
+  }
+  .card:hover .card-media img{ transform: scale(1.04); }
+
+  .card-body{
+    padding: 14px 16px 18px;
+    display:flex;
+    flex-direction:column;
+    gap: 6px;
+    flex:1;
+  }
+  .card-body h3{
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+  }
+  .card-footer{
+    margin-top: 4px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .price{
+    font-weight: 700;
+    font-size: 14.5px;
+    color: var(--accent);
+  }
+  .open-hint{
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- ТЕГИ ---------- */
+  .tags{
+    display:flex; flex-wrap:wrap; gap:6px;
+    margin: 10px 0 4px;
+  }
+  .tag{
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .tag.v0{ background: var(--accent-soft); color: var(--accent); }
+  .tag.v1{ background: var(--peach-soft); color: #B87C3A; }
+  .tag.v2{ background: var(--sage-soft); color: #5E7C58; }
+
+  /* ---------- МОДАЛЬНІ ВІКНА (спільні стилі) ---------- */
+  .overlay{
+    position: fixed;
+    inset:0;
+    background: rgba(36,31,29,0.5);
+    backdrop-filter: blur(3px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 18px;
+    opacity:0;
+    pointer-events:none;
+    transition: opacity .2s ease;
+    z-index: 50;
+  }
+  .overlay.open{ opacity:1; pointer-events:auto; }
+  #contactOverlay{ z-index: 60; }
+
+  .modal{
+    background: var(--paper);
+    color: var(--ink);
+    width: 100%;
+    max-width: 460px;
+    max-height: 88vh;
+    overflow-y: auto;
+    border-radius: 20px;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.28);
+    transform: scale(.94) translateY(10px);
+    transition: transform .25s ease;
+  }
+  .overlay.open .modal{ transform: scale(1) translateY(0); }
+
+  .modal-media{
+    aspect-ratio: 1/1;
+    position:relative;
+    overflow:hidden;
+    border-radius: 20px 20px 0 0;
+    background: var(--accent-soft);
+  }
+  .modal-media img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  .modal-close{
+    position:absolute;
+    top:12px; right:12px;
+    width:36px; height:36px;
+    border-radius:50%;
+    border:none;
+    background: rgba(255,255,255,0.85);
+    color: var(--ink);
+    font-size:16px;
+    line-height:1;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: background .2s ease;
+  }
+  .modal-close:hover{ background: var(--accent); color:#fff; }
+
+  .modal-body{ padding: 22px 24px 26px; }
+  .modal-body h2{
+    font-family: var(--font-display);
+    font-weight:600;
+    font-size: 25px;
+    margin: 0 0 2px;
+  }
+  .modal-taste{
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin: 2px 0 0;
+  }
+  .modal-price{
+    display:inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 14.5px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin: 14px 0 16px;
+  }
+  .modal-section-label{
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--ink-soft);
+    margin: 0 0 6px;
+  }
+  .modal-desc{ font-size: 15px; line-height: 1.6; color: var(--ink); margin: 0 0 20px; }
+
+  .contact-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width: 100%;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s ease, transform .2s ease;
+  }
+  .contact-btn:hover{ background: var(--accent); transform: translateY(-1px); }
+
+  /* ---------- Вікно "Зв'язатися" ---------- */
+  .contact-modal{
+    background: var(--paper);
+    width: 100%;
+    max-width: 340px;
+    border-radius: 20px;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.28);
+    padding: 26px 22px 22px;
+    position: relative;
+    transform: scale(.94) translateY(10px);
+    transition: transform .25s ease;
+  }
+  .overlay.open .contact-modal{ transform: scale(1) translateY(0); }
+  .contact-modal h3{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 21px;
+    margin: 0 0 18px;
+    text-align:center;
+  }
+  .contact-row{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    padding: 13px 6px;
+    border-top: 1px solid var(--line);
+    text-decoration:none;
+    color: var(--ink);
+    transition: color .2s ease;
+  }
+  .contact-row:first-of-type{ border-top:none; }
+  .contact-row:hover{ color: var(--accent); }
+  .contact-icon{
+    width: 34px; height:34px; border-radius:50%;
+    background: var(--accent-soft);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 16px;
+    flex-shrink:0;
+  }
+  .contact-text b{ display:block; font-size: 14.5px; }
+  .contact-text span{ display:block; font-size: 12.5px; color: var(--ink-soft); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+
+  footer{
+    text-align:center;
+    padding: 20px 20px 50px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 class="brand">Słodkie marzenia</h1>
+  <div class="city">Żywiec</div>
+  <div class="contacts">
+    <a href="tel:+48787208935">+48 787 208 935 (Юля)</a>
+    <span class="dot">•</span>
+    <a href="https://www.facebook.com/share/18wKdr5u2g/" target="_blank" rel="noopener">Facebook</a>
+  </div>
+  <div class="header-line"></div>
+</header>
+
+<main>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>Słodkie marzenia · Żywiec</footer>
+
+<!-- Модалка торта -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <div class="modal-media" id="modalMedia">
+      <button class="modal-close" id="modalClose" aria-label="Закрити">✕</button>
+    </div>
+    <div class="modal-body">
+      <h2 id="modalName"></h2>
+      <p class="modal-taste" id="modalTaste"></p>
+      <div class="tags" id="modalTags"></div>
+      <div class="modal-price" id="modalPrice"></div>
+      <div class="modal-section-label">Склад</div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <button class="contact-btn" id="openContact">Зв'язатися</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка "Зв'язатися" -->
+<div class="overlay" id="contactOverlay">
+  <div class="contact-modal">
+    <button class="modal-close" id="contactClose" aria-label="Закрити" style="position:absolute; top:12px; right:12px;">✕</button>
+    <h3>Зв'язатися</h3>
+    <a class="contact-row" href="tel:+48787208935">
+      <span class="contact-icon">☏</span>
+      <span class="contact-text"><b>+48 787 208 935</b><span>Телефон (Юля)</span></span>
+    </a>
+    <a class="contact-row" href="https://www.facebook.com/share/18wKdr5u2g/" target="_blank" rel="noopener">
+      <span class="contact-icon">f</span>
+      <span class="contact-text"><b>Facebook</b><span>Сторінка Słodkie marzenia</span></span>
+    </a>
+    <a class="contact-row" href="https://t.me/+380501435646" target="_blank" rel="noopener">
+      <span class="contact-icon">✈</span>
+      <span class="contact-text"><b>+380 (50) 143 56 46</b><span>Telegram</span></span>
+    </a>
+  </div>
+</div>
+
+<script>
+  /* ============================================================
+     ДАНІ ПРО ТОРТИ
+     name    — назва
+     price   — ціна
+     img     — шлях до фото
+     taste   — короткий образний опис смаку (курсивом під назвою)
+     tags    — 2-3 короткі теги
+     desc    — склад
+     ============================================================ */
+  const CAKES = [
+    { name: "Апельсиновий", price: "110 zł/кг", img: "images/apelsynovyi.jpg",
+      taste: "Яскравий, цитрусовий, з легкою шоколадною ноткою.",
+      tags: ["цитрусовий", "освіжаючий", "шоколадний"],
+      desc: "Бісквіт з апельсиновою цедрою, легкий шоколадний крем, апельсиновий мус, апельсинове конфі." },
+    { name: "Вишня шоколад", price: "100 zł/кг", img: "images/vyshnia-shokolad.jpg",
+      taste: "Насичений шоколадний смак з приємною кислинкою вишні.",
+      tags: ["шоколадний", "ягідний", "кисло-солодкий"],
+      desc: "Бісквіт на молочному шоколаді, шоколадний крем чіз, вишня." },
+    { name: "Дубайський шоколад", price: "130 zł/кг", img: "images/dubaiskyi-shokolad.jpg",
+      taste: "Густий, горіховий, з хрусткою начинкою — для справжніх шокоголіків.",
+      tags: ["шоколадний", "горіховий", "насичений"],
+      desc: "Шоколадний бісквіт, шоколадне кремю, начинка дубайський шоколад, фісташковий крем." },
+    { name: "Кокос чорниця", price: "120 zł/кг", img: "images/kokos-chornytsia.jpg",
+      taste: "Ніжний тропічний кокос, відтінений ягідною кислинкою чорниці.",
+      tags: ["ніжний", "ягідний", "тропічний"],
+      desc: "Кокосовий бісквіт, кокосовий мус, чорничне конфі, чорничний крем чіз." },
+    { name: "Малина шоколад", price: "125 zł/кг", img: "images/malyna-shokolad.jpg",
+      taste: "Соковитий, яскраво ягідний, у парі з м'яким шоколадом.",
+      tags: ["шоколадний", "ягідний", "соковитий"],
+      desc: "Шоколадний бісквіт, малиновий мус з малиною в білому шоколаді, малинове конфі, крем чіз." },
+    { name: "Малиновий рай", price: "120 zł/кг", img: "images/malynovyi-rai.jpg",
+      taste: "Легкий і освіжаючий, з яскравим малиновим акцентом.",
+      tags: ["ягідний", "легкий", "освіжаючий"],
+      desc: "Бісквіт з додаванням малинового пюре, малиновий мус, кокосовий прошарок, малиновий крем." },
+    { name: "Мед груша горгонзола", price: "120 zł/кг", img: "images/med-hrusha-horgonzola.jpg",
+      taste: "Медово-пряний смак із благородною гостринкою сиру — для гурманів.",
+      tags: ["медовий", "пікантний", "вишуканий"],
+      desc: "Тонкі медово-мигдалеві коржі, карамелізована груша, сир горгонзола, сметанно-медовий крем." },
+    { name: "Медовик класичний", price: "80 zł/кг", img: "images/medovyk-klasychnyi.jpg",
+      taste: "М'який, домашній, класичний медовий смак.",
+      tags: ["медовий", "класичний", "ніжний"],
+      desc: "Медові коржі, вершково-сметанний крем." },
+    { name: "Молочна дівчинка", price: "110 zł/кг", img: "images/molochna-divchynka.jpg",
+      taste: "Солодко-вершковий, з легкою кислинкою смородини.",
+      tags: ["вершковий", "ніжний", "ягідний"],
+      desc: "Коржі на згущеному молоці, крем чіз, маскарпоне, смородинове конфі." },
+    { name: "Наполеон", price: "80 zł/кг", img: "images/napoleon.jpg",
+      taste: "Хрусткі коржі й ніжний вершковий крем — впізнавана класика.",
+      tags: ["хрусткий", "вершковий", "класичний"],
+      desc: "Листові коржі, крем пломбір." },
+    { name: "Орео", price: "115 zł/кг", img: "images/oreo.jpg",
+      taste: "Шоколадно-кремовий, з характерним хрустом печива.",
+      tags: ["шоколадний", "кремовий", "для дітей"],
+      desc: "Шоколадний бісквіт, чизкейк орео, мус орео, крем чіз." },
+    { name: "Полуничне тріо", price: "120 zł/кг", img: "images/polunychne-trio.jpg",
+      taste: "Яскраво полуничний, легкий і літній.",
+      tags: ["ягідний", "легкий", "літній"],
+      desc: "Молочний бісквіт, полуничний мус, полуничне конфі, полуничне кулі, крем чіз." },
+    { name: "Снікерс", price: "115 zł/кг", img: "images/snikers.jpg",
+      taste: "Насичений шоколад, солона карамель і хрусткий арахіс.",
+      tags: ["шоколадний", "горіховий", "насичений"],
+      desc: "Шоколадний бісквіт, солона карамель, арахіс, крем чіз." },
+    { name: "Фісташка малина", price: "125 zł/кг", img: "images/fistashka-malyna.jpg",
+      taste: "Вишуканий горіховий смак у поєднанні з ягідною кислинкою.",
+      tags: ["горіховий", "ягідний", "вишуканий"],
+      desc: "Фісташковий бісквіт, фісташковий мус, малинове конфі, фісташковий крем чіз." },
+    { name: "Червоний оксамит", price: "120 zł/кг", img: "images/chervonyi-oksamyt.jpg",
+      taste: "Оксамитово-ніжний, з ягідними нотками.",
+      tags: ["ніжний", "ягідний", "класичний"],
+      desc: "Бісквіт червоний оксамит, вишневе конфі, полуничний ганаш, крем чіз, маскарпоне." },
+    { name: "Чорниця лимон", price: "115 zł/кг", img: "images/chornytsia-lymon.jpg",
+      taste: "Свіжий, ягідно-цитрусовий, з приємною кислинкою.",
+      tags: ["ягідний", "цитрусовий", "освіжаючий"],
+      desc: "Лимонний бісквіт, чорничний мус, чорничне конфі, лимонний ганаш, крем чіз." },
+    { name: "Шпинат полуниця", price: "125 zł/кг", img: "images/shpynat-polunytsia.jpg",
+      taste: "Незвичний, свіжий, м'ятно-ягідний.",
+      tags: ["незвичний", "ягідний", "свіжий"],
+      desc: "Шпинатний бісквіт, м'ятний мус, полуничне конфі, крем чіз маскарпоне." },
+    { name: "Жіночі примхи", price: "80 zł/кг", img: "images/zhinochi-prymkhy.jpg",
+      taste: "Мікс смаків — шоколад, горіх, мак і родзинки в одному шматочку.",
+      tags: ["асорті", "горіховий", "класичний"],
+      desc: "Бісквіт шоколадний, горіховий, з маком, з родзинками, сметанний крем." },
+    { name: "Лайм абрикос", price: "100 zł/кг", img: "images/laim-abrykos.jpg",
+      taste: "Свіжий і ніжний, з цитрусово-фруктовим акцентом.",
+      tags: ["цитрусовий", "фруктовий", "ніжний"],
+      desc: "Шпинатно-лаймовий бісквіт, сметанно-вершковий крем, абрикосове конфі." },
+  ];
+
+  const grid = document.getElementById('grid');
+  const overlay = document.getElementById('overlay');
+  const modalMedia = document.getElementById('modalMedia');
+  const modalName = document.getElementById('modalName');
+  const modalTaste = document.getElementById('modalTaste');
+  const modalTags = document.getElementById('modalTags');
+  const modalPrice = document.getElementById('modalPrice');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalClose = document.getElementById('modalClose');
+  const openContact = document.getElementById('openContact');
+  const contactOverlay = document.getElementById('contactOverlay');
+  const contactClose = document.getElementById('contactClose');
+
+  CAKES.forEach((cake, i) => {
+    const card = document.createElement('button');
+    card.className = 'card';
+    card.style.animationDelay = (i * 35) + 'ms';
+    card.innerHTML = `
+      <div class="card-media"><img src="${cake.img}" alt="${cake.name}" loading="lazy"></div>
+      <div class="card-body">
+        <h3>${cake.name}</h3>
+        <div class="card-footer">
+          <span class="price">${cake.price}</span>
+          <span class="open-hint">Детальніше →</span>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', () => openModal(cake));
+    grid.appendChild(card);
+  });
+
+  function openModal(cake){
+    modalMedia.innerHTML = `<img src="${cake.img}" alt="${cake.name}"><button class="modal-close" id="modalClose2" aria-label="Закрити">✕</button>`;
+    document.getElementById('modalClose2').addEventListener('click', closeModal);
+    modalName.textContent = cake.name;
+    modalTaste.textContent = cake.taste || '';
+    modalTags.innerHTML = (cake.tags || []).map((t, idx) => `<span class="tag v${idx % 3}">${t}</span>`).join('');
+    modalPrice.textContent = cake.price;
+    modalDesc.textContent = cake.desc;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(){
+    overlay.classList.remove('open');
+    if(!contactOverlay.classList.contains('open')) document.body.style.overflow = '';
+  }
+  modalClose.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if(e.target === overlay) closeModal(); });
+
+  openContact.addEventListener('click', () => { contactOverlay.classList.add('open'); });
+  function closeContact(){ contactOverlay.classList.remove('open'); }
+  contactClose.addEventListener('click', closeContact);
+  contactOverlay.addEventListener('click', (e) => { if(e.target === contactOverlay) closeContact(); });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      if(contactOverlay.classList.contains('open')) closeContact();
+      else closeModal();
+    }
+  });
+</script>
+
+</body>
+</html>
